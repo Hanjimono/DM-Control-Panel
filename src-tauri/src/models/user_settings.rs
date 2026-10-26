@@ -1,13 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-/// Discord guild and the voice channel used after the app opens.
+/// Discord server and the default voice channel used after the app opens.
 ///
 /// Empty strings mean the user has not entered a value yet.
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct DiscordSettings {
-    pub guild_id: String,
-    pub voice_channel_id: String,
+    pub server_id: String,
+    pub default_voice_channel_id: String,
 }
 
 /// Typed user settings document. Secrets are stored separately.
@@ -21,8 +21,8 @@ pub struct UserSettings {
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", deny_unknown_fields, default)]
 pub struct DiscordSettingsPatch {
-    pub guild_id: Option<String>,
-    pub voice_channel_id: Option<String>,
+    pub server_id: Option<String>,
+    pub default_voice_channel_id: Option<String>,
 }
 
 /// Partial user settings. Missing branches stay unchanged.
@@ -38,11 +38,11 @@ impl UserSettings {
         let Some(discord_patch) = patch.discord else {
             return;
         };
-        if let Some(guild_id) = discord_patch.guild_id {
-            self.discord.guild_id = guild_id.trim().to_string();
+        if let Some(server_id) = discord_patch.server_id {
+            self.discord.server_id = server_id.trim().to_string();
         }
-        if let Some(voice_channel_id) = discord_patch.voice_channel_id {
-            self.discord.voice_channel_id = voice_channel_id.trim().to_string();
+        if let Some(default_voice_channel_id) = discord_patch.default_voice_channel_id {
+            self.discord.default_voice_channel_id = default_voice_channel_id.trim().to_string();
         }
     }
 }
@@ -52,17 +52,17 @@ mod tests {
     use super::*;
 
     #[test]
-    fn patch_trims_a_guild_id_and_keeps_the_omitted_channel() {
+    fn patch_trims_a_server_id_and_keeps_the_omitted_channel() {
         let mut settings = UserSettings::default();
-        settings.discord.voice_channel_id = "99".to_string();
+        settings.discord.default_voice_channel_id = "99".to_string();
         settings.apply_patch(UserSettingsPatch {
             discord: Some(DiscordSettingsPatch {
-                guild_id: Some("  42  ".to_string()),
-                voice_channel_id: None,
+                server_id: Some("  42  ".to_string()),
+                default_voice_channel_id: None,
             }),
         });
-        assert_eq!(settings.discord.guild_id, "42");
-        assert_eq!(settings.discord.voice_channel_id, "99");
+        assert_eq!(settings.discord.server_id, "42");
+        assert_eq!(settings.discord.default_voice_channel_id, "99");
     }
 
     #[test]
@@ -70,13 +70,13 @@ mod tests {
         let settings: UserSettings =
             serde_json::from_str(r#"{"ui":{"hideSongName":true,"songCardLayout":"compact"}}"#)
                 .expect("old settings json");
-        assert_eq!(settings.discord.guild_id, "");
-        assert_eq!(settings.discord.voice_channel_id, "");
+        assert_eq!(settings.discord.server_id, "");
+        assert_eq!(settings.discord.default_voice_channel_id, "");
 
         let saved = serde_json::to_string(&settings).expect("serialize settings");
         assert!(!saved.contains("\"ui\""));
-        assert!(saved.contains("guildId"));
-        assert!(saved.contains("voiceChannelId"));
+        assert!(saved.contains("serverId"));
+        assert!(saved.contains("defaultVoiceChannelId"));
     }
 
     #[test]

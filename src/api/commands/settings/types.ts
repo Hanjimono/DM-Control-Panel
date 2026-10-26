@@ -1,9 +1,9 @@
 /** Discord server and default voice channel. Secrets stay out of this document. */
 export type DiscordSettings = {
-  /** Guild id entered by the user. Empty until set. */
-  guildId: string
+  /** Server id entered by the user. Empty until set. */
+  serverId: string
   /** Voice channel used after the app opens. Empty until set. */
-  voiceChannelId: string
+  defaultVoiceChannelId: string
 }
 
 /** Full typed user settings document (no secrets). */
@@ -14,10 +14,10 @@ export type UserSettings = {
 
 /** Partial update for {@link DiscordSettings}; omitted fields stay unchanged. */
 export type DiscordSettingsPatch = {
-  /** Optional override for {@link DiscordSettings.guildId}. */
-  guildId?: string
-  /** Optional override for {@link DiscordSettings.voiceChannelId}. */
-  voiceChannelId?: string
+  /** Optional override for {@link DiscordSettings.serverId}. */
+  serverId?: string
+  /** Optional override for {@link DiscordSettings.defaultVoiceChannelId}. */
+  defaultVoiceChannelId?: string
 }
 
 /** Partial update for {@link UserSettings}; omitted branches stay unchanged. */
