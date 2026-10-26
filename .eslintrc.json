@@ -1,0 +1,14 @@
+{
+  "root": true,
+  "extends": ["plugin:prettier/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "ecmaFeatures": { "jsx": true },
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {},
+  "ignorePatterns": ["dist", "node_modules", "src-tauri", ".yarn", "vite.config.ts"]
+}

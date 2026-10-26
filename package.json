@@ -1,0 +1,69 @@
+{
+  "name": "dm-control-panel",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "yarn@4.10.3",
+  "engines": {
+    "node": "20.12.0",
+    "yarn": "4.10.3"
+  },
+  "workspaces": [
+    "src/ui"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint-staged": "lint-staged",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\" \"*.{js,ts,json,md}\"",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix --resolve-plugins-relative-to ./node_modules",
+      "prettier --write"
+    ],
+    "*.{json,md,css}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.19",
+    "@fontsource/gantari": "^5.3.0",
+    "@fontsource/material-symbols-rounded": "^5.3.9",
+    "@hookform/resolvers": "^5.2.2",
+    "@maskito/core": "^5.5.0",
+    "@maskito/kit": "^5.5.0",
+    "@maskito/react": "^5.5.0",
+    "@tanstack/react-query": "^5.104.5",
+    "@tauri-apps/api": "^2",
+    "clsx": "^2.1.1",
+    "react": "18",
+    "react-dom": "18",
+    "react-hook-form": "^7.71.2",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4",
+    "@tauri-apps/cli": "^2",
+    "@types/node": "^22.15.21",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@typescript-eslint/eslint-plugin": "^8.46.0",
+    "@typescript-eslint/parser": "^8.46.0",
+    "@vitejs/plugin-react": "^4.6.0",
+    "eslint": "8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "15.2.10",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "vite": "^6.3.5"
+  }
+}

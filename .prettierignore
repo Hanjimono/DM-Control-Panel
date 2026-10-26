@@ -1,0 +1,7 @@
+dist
+node_modules
+src-tauri
+.yarn
+src/ui
+*.lock
+Cargo.lock

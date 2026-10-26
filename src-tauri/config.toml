@@ -1,0 +1,3 @@
+[logging]
+# info | debug | trace  (warn/error always pass when level is info or higher)
+level = "trace"

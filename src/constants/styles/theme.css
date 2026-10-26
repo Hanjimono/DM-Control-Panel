@@ -1,0 +1,194 @@
+@import "../../ui/Config/theme.default.css";
+
+/*
+ * Coffee Break UI kit → pet-ui tokens.
+ * Figma: https://www.figma.com/design/fPuFfIpqr9eUiLjqx8ihmp
+ * App-only colors (surfaces, tags, info) live in palette.css.
+ */
+@theme {
+  /* ----- Colors: actions ----- */
+  /* main button / main button hover / light text */
+  --color-action-primary: #e3613d;
+  --color-action-primary-hover: #d95733;
+  --color-action-primary-shadow: transparent;
+  --color-action-primary-text: #f4e3e3;
+
+  /* second button / second button hover — the kit's only red */
+  --color-action-secondary: #bb204e;
+  --color-action-secondary-hover: #b21745;
+  --color-action-secondary-shadow: transparent;
+  --color-action-secondary-text: #f4e3e3;
+
+  --color-action-danger: #bb204e;
+  --color-action-danger-hover: #b21745;
+  --color-action-danger-shadow: transparent;
+  --color-action-danger-text: #f4e3e3;
+
+  /* No success color in the kit; stay inside the warm palette. */
+  --color-action-success: #edc3b5;
+  --color-action-success-hover: #e3b9ab;
+  --color-action-success-shadow: transparent;
+  --color-action-success-text: #2f080d;
+
+  /* ----- Colors: loaders ----- */
+  --color-loader-primary: #e3613d;
+  --color-loader-secondary: #edc3b5;
+
+  /* ----- Colors: links ----- */
+  --color-link: #e3613d;
+  --color-link-hover: #d95733;
+  --color-link-minor: #987a7a;
+  --color-link-minor-hover: #edc3b5;
+
+  /* ----- Colors: semantic text ----- */
+  /* main text, time text */
+  --color-text-default: #edc3b5;
+  --color-text-secondary: #987a7a;
+  --color-text-danger: #bb204e;
+  --color-text-success: #f4e3e3;
+
+  /* ----- Colors: forms ----- */
+  /* accent dark fill, unactive placeholder, main text value */
+  --color-form-bg: #2f080d;
+  --color-form-border: #2f080d;
+  --color-form-border-focused: #e3613d;
+  --color-form-border-errored: #bb204e;
+  --color-form-bg-disabled: #260004;
+  --color-form-text: #edc3b5;
+  --color-form-placeholder: #9b8080;
+  --color-form-dropdown-bg: #2f080d;
+  --color-form-dropdown-bg-hover: #461f24;
+  --color-form-dropdown-bg-selected: #461f24;
+  --color-form-dropdown-bg-disabled: #260004;
+  --color-form-choice-bg: transparent;
+  --color-form-choice-bg-checked: #e3613d;
+  --color-form-choice-border-checked: #e3613d;
+  --color-form-choice-mark: #f4e3e3;
+
+  /* ----- Colors: tooltip ----- */
+  --color-tooltip-bg: #2f080d;
+  --color-tooltip-border: #461f24;
+  --color-tooltip-title-bg: transparent;
+  --color-tooltip-title-text: #f4e3e3;
+
+  /* ----- Colors: modal ----- */
+  --color-modal-overlay: rgb(38 0 4 / 72%);
+  --color-modal-content-bg: #512a2f;
+
+  /* ----- Font families ----- */
+  --font-text: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-title: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-form: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-action: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-tooltip-title: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-form-label: "Gantari", "Segoe UI", system-ui, sans-serif;
+  --font-form-element: "Gantari", "Segoe UI", system-ui, sans-serif;
+
+  /* ----- Font sizes ----- */
+  /* small 13, main 15, H4 16, H3 18. Desktop window is under the lg breakpoint. */
+  --text-ui-2xs: 0.6875rem;
+  --text-ui-xs: 0.75rem;
+  --text-ui-s: 0.8125rem;
+  --text-ui-m: 0.9375rem;
+  --text-ui-l: 1rem;
+  --text-ui-xl: 1.125rem;
+  --text-ui-2xl: 1.375rem;
+  --text-ui-3xl: 1.75rem;
+
+  --text-heading-1: 1.75rem;
+  --text-heading-2: 1.375rem;
+  --text-heading-3: 1.125rem;
+  --text-heading-4: 1rem;
+  --text-heading-5: 0.9375rem;
+  --text-heading-6: 0.8125rem;
+
+  --text-ui-mobile-2xs: 0.6875rem;
+  --text-ui-mobile-xs: 0.75rem;
+  --text-ui-mobile-s: 0.8125rem;
+  --text-ui-mobile-m: 0.9375rem;
+  --text-ui-mobile-l: 1rem;
+  --text-ui-mobile-xl: 1.125rem;
+  --text-ui-mobile-2xl: 1.375rem;
+  --text-ui-mobile-3xl: 1.75rem;
+
+  --text-heading-mobile-1: 1.75rem;
+  --text-heading-mobile-2: 1.375rem;
+  --text-heading-mobile-3: 1.125rem;
+  --text-heading-mobile-4: 1rem;
+  --text-heading-mobile-5: 0.9375rem;
+  --text-heading-mobile-6: 0.8125rem;
+
+  /* Buttons use main 15px at both kit sizes; height comes from padding. */
+  --text-action-sm: 0.9375rem;
+  --text-action-md: 0.9375rem;
+  --text-action-lg: 0.9375rem;
+  --text-action-mobile-sm: 0.9375rem;
+  --text-action-mobile-md: 0.9375rem;
+  --text-action-mobile-lg: 0.9375rem;
+
+  --text-form: 0.9375rem;
+  --text-form-mobile: 0.9375rem;
+
+  /* ----- Font weights ----- */
+  --font-weight-action: 400;
+  --font-weight-title: 600;
+  --font-weight-form-label: 400;
+  --font-weight-form-element: 400;
+  --font-weight-tooltip-title: 600;
+
+  /* Figma line height 100 */
+  --leading-text: 1;
+  --leading-action: 1;
+
+  /* ----- Actions ----- */
+  /* small 26px, big 36px, padding 24px, radius 30px, icon gap 8px */
+  --spacing-action-icon-gap: 0.5rem;
+  --spacing-action-pad-sm-block: 0.34375rem;
+  --spacing-action-pad-sm-inline: 1.5rem;
+  --spacing-action-pad-md-block: 0.65625rem;
+  --spacing-action-pad-md-inline: 1.5rem;
+  --spacing-action-pad-lg-block: 0.65625rem;
+  --spacing-action-pad-lg-inline: 1.5rem;
+  --border-width-action: 1px;
+  --radius-action-sm: 1.875rem;
+  --radius-action-md: 1.875rem;
+  --radius-action-lg: 1.875rem;
+  --spacing-action-shadow-blur: 0px;
+  --spacing-action-shadow-x: 0px;
+  --spacing-action-shadow-y: 0px;
+
+  /* ----- Forms ----- */
+  /* Label sits 4px above a 35px field, radius 12px, padding 16×8. */
+  --spacing-form-label-gap: 0.25rem;
+  --radius-form: 0.75rem;
+  --spacing-form-label-height: 1rem;
+  --spacing-form-height: 2.1875rem;
+  --spacing-form-pad-block: 0.5rem;
+  --spacing-form-pad-inline: 1rem;
+  --border-width-form: 1px;
+  --spacing-form-choice-size: 0.75rem;
+  --radius-form-choice: 1px;
+
+  --spacing-form-mobile-label-gap: 0.25rem;
+  --spacing-form-mobile-label-height: 1rem;
+  --spacing-form-mobile-height: 2.1875rem;
+  --spacing-form-mobile-pad-block: 0.5rem;
+  --spacing-form-mobile-pad-inline: 1rem;
+
+  --radius-form-dropdown: 0.75rem;
+  --shadow-form-dropdown: 0 8px 24px rgb(38 0 4 / 45%);
+  --radius-form-dropdown-option: 0.5rem;
+
+  /* ----- Tooltip ----- */
+  --radius-tooltip: 0.75rem;
+  --shadow-tooltip: 0 8px 24px rgb(38 0 4 / 45%);
+
+  /* ----- Modal ----- */
+  /* Panels use 12px radius, 32px padding, 30px gap under the title. */
+  --radius-modal: 0.75rem;
+  --spacing-modal-content-pad: 2rem;
+  --spacing-modal-body-gap: 1.875rem;
+  --spacing-modal-content-max-width: 29rem;
+  --spacing-modal-confirm-max-width: 29rem;
+  --shadow-modal: 0 16px 40px rgb(38 0 4 / 40%);
+}

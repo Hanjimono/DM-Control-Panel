@@ -1,0 +1,41 @@
+[package]
+name = "dm-control-panel"
+version = "0.1.0"
+description = "DM Control Panel"
+authors = ["Hanjimono"]
+edition = "2021"
+
+[lib]
+name = "dm_control_panel_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "time"] }
+tracing-appender = "0.2"
+time = { version = "0.3", features = ["formatting"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+serenity = { version = "0.12", default-features = false, features = [
+  "client",
+  "gateway",
+  "rustls_backend",
+  "standard_framework",
+  "voice",
+  "cache",
+] }
+songbird = { version = "0.5", features = ["serenity"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

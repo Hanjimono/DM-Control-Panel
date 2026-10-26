@@ -1,0 +1,46 @@
+/*
+ * Coffee Break colors and type that pet-ui does not theme.
+ * Import after Tailwind. Utilities: bg-background, text-foreground, bg-category-3, text-main.
+ */
+@theme static {
+  --font-sans: "Gantari", "Segoe UI", system-ui, sans-serif;
+
+  /* Figma: background, accent, accent dark, accent dark hover */
+  --color-background: #512a2f;
+  --color-accent: #461f24;
+  --color-accent-dark: #2f080d;
+  --color-accent-dark-hover: #260004;
+
+  /* main text, main text hover, light text, time text, unactive, icon */
+  --color-foreground: #edc3b5;
+  --color-foreground-hover: #e3b9ab;
+  --color-foreground-light: #f4e3e3;
+  --color-muted: #987a7a;
+  --color-inactive: #9b8080;
+  --color-icon: #edc3b5;
+
+  /* Info banner fill. Use bg-info/50; banner text is text-accent. */
+  --color-info: #ff936f;
+
+  /* category accent 1, 2, 3, 5, 6 — the kit has no accent 4 */
+  --color-category-1: #8a3d5e;
+  --color-category-2: #a1463c;
+  --color-category-3: #ba4778;
+  --color-category-5: #6d3e7f;
+  --color-category-6: #ba475c;
+
+  /* Figma type names. Component text uses text-ui-* / text-heading-* from theme.css. */
+  --text-small: 0.8125rem;
+  --text-main: 0.9375rem;
+  --text-h4: 1rem;
+  --text-h3: 1.125rem;
+
+  /* Tags and other pills. Buttons already use rounded-action-*. */
+  --radius-pill: 1.875rem;
+
+  /* 30px stack gap inside panels */
+  --spacing-panel: 1.875rem;
+
+  /* Sidebar rail width from the menu frame (74px) */
+  --spacing-menu: 4.625rem;
+}
