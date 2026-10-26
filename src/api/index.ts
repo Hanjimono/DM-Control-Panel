@@ -15,6 +15,24 @@ export type {
 } from "./types"
 export { ping } from "./commands/ping"
 export type { PingData } from "./commands/ping"
+export {
+  libraryAddTrack,
+  libraryCreateCategory,
+  libraryDeleteCategory,
+  libraryDeleteTrack,
+  libraryList,
+  libraryRenameCategory,
+  libraryUpdateTrack,
+  SOURCE_KIND
+} from "./commands/library"
+export type {
+  Category,
+  CategoryWithTracks,
+  NewTrack,
+  SourceKindCode,
+  Track,
+  TrackUpdate
+} from "./commands/library"
 export { settingsGetAll, settingsUpdate } from "./commands/settings"
 export type {
   DiscordSettings,
@@ -27,6 +45,13 @@ export { queryClient } from "./queryClient"
 export { queryKeys } from "./queryKeys"
 export {
   createCommandMutation,
+  useLibrary,
+  useCreateCategory,
+  useRenameCategory,
+  useDeleteCategory,
+  useAddTrack,
+  useUpdateTrack,
+  useDeleteTrack,
   usePing,
   useUserSettings,
   useSettingsUpdate,

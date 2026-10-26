@@ -52,6 +52,13 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
+            commands::library::library_list,
+            commands::library::library_create_category,
+            commands::library::library_rename_category,
+            commands::library::library_delete_category,
+            commands::library::library_add_track,
+            commands::library::library_update_track,
+            commands::library::library_delete_track,
             commands::ping::ping,
             commands::settings::settings_get_all,
             commands::settings::settings_update,

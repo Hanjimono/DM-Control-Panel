@@ -1,3 +1,5 @@
+use serde::ser::SerializeStruct;
+use serde::{Deserialize, Serialize, Serializer};
 use std::path::Path;
 
 /// Numeric codes stored in `tracks.source_kind`.
@@ -29,7 +31,8 @@ pub struct Track {
 }
 
 /// Values the user supplies when adding a track.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct NewTrack {
     pub category_id: i64,
     pub comment: String,
@@ -39,7 +42,8 @@ pub struct NewTrack {
 }
 
 /// User edit of a track. Title, author, and duration are not part of this edit.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct TrackUpdate {
     pub category_id: i64,
     pub comment: String,
@@ -71,6 +75,28 @@ impl Track {
             return local_file_name(&self.source_ref);
         }
         self.source_ref.clone()
+    }
+}
+
+impl Serialize for Track {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("Track", 12)?;
+        state.serialize_field("id", &self.id)?;
+        state.serialize_field("categoryId", &self.category_id)?;
+        state.serialize_field("comment", &self.comment)?;
+        state.serialize_field("title", &self.title)?;
+        state.serialize_field("author", &self.author)?;
+        state.serialize_field("durationMs", &self.duration_ms)?;
+        state.serialize_field("sourceKind", &self.source_kind)?;
+        state.serialize_field("sourceRef", &self.source_ref)?;
+        state.serialize_field("sortOrder", &self.sort_order)?;
+        state.serialize_field("createdAt", &self.created_at)?;
+        state.serialize_field("tags", &self.tags)?;
+        state.serialize_field("displayTitle", &self.display_title())?;
+        state.end()
     }
 }
 
@@ -119,5 +145,27 @@ mod tests {
         let url = "https://soundcloud.com/artist/track";
         let track = track(None, SourceKind::SOUNDCLOUD, url);
         assert_eq!(track.display_title(), url);
+    }
+
+    #[test]
+    fn track_json_includes_display_title_and_camel_case_fields() {
+        let track = track(None, SourceKind::LOCAL, "/music/dawn.mp3");
+        let json = serde_json::to_value(&track).expect("serialize track");
+        assert_eq!(json["displayTitle"], "dawn.mp3");
+        assert_eq!(json["sourceKind"], SourceKind::LOCAL);
+        assert_eq!(json["sourceRef"], "/music/dawn.mp3");
+        assert_eq!(json["categoryId"], 1);
+        assert!(json.get("display_title").is_none());
+    }
+
+    #[test]
+    fn new_track_deserializes_camel_case() {
+        let track: NewTrack = serde_json::from_str(
+            r#"{"categoryId":2,"comment":"","sourceKind":1,"sourceRef":"/a.mp3","tags":["night"]}"#,
+        )
+        .expect("deserialize new track");
+        assert_eq!(track.category_id, 2);
+        assert_eq!(track.source_kind, SourceKind::LOCAL);
+        assert_eq!(track.tags, vec!["night".to_string()]);
     }
 }

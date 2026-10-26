@@ -1,8 +1,5 @@
 mod app_secrets;
-// Library models are reached through LibraryService. Commands that call it come later.
-#[allow(dead_code)]
 mod category;
-#[allow(dead_code)]
 mod track;
 mod user_settings;
 

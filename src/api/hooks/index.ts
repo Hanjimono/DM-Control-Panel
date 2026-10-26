@@ -1,5 +1,8 @@
 export { createCommandMutation } from "./createCommandMutation"
 export type { CommandMutationResult, CommandQueryResult } from "./types"
+export { useLibrary } from "./useLibrary"
+export { useCreateCategory, useDeleteCategory, useRenameCategory } from "./useLibraryCategory"
+export { useAddTrack, useDeleteTrack, useUpdateTrack } from "./useLibraryTrack"
 export { usePing } from "./usePing"
 export { useUserSettings } from "./useUserSettings"
 export { useSettingsUpdate } from "./useSettingsUpdate"
