@@ -32,6 +32,8 @@ serenity = { version = "0.12", default-features = false, features = [
   "cache",
 ] }
 songbird = { version = "0.5", features = ["serenity"] }
+symphonia = { version = "0.5", default-features = false, features = ["mp3", "aac", "isomp4", "alac", "flac", "pcm", "vorbis", "wav", "ogg", "mkv"] }
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls"] }
 
 [profile.release]
 panic = "abort"

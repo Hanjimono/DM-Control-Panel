@@ -8,7 +8,6 @@ pub struct SecretsService;
 
 impl SecretsService {
     /// Backend-only: returns the stored Discord bot token (may be empty).
-    #[allow(dead_code)]
     pub fn discord_bot_token(db: &AppDb) -> Result<String, AppError> {
         Ok(Self::load(db)?.discord_bot_token)
     }

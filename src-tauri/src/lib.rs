@@ -8,6 +8,8 @@ mod models;
 mod repositories;
 mod services;
 
+use std::sync::Arc;
+
 use tauri::{path::BaseDirectory, Manager};
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -44,7 +46,9 @@ pub fn run() {
 
             let db_path = data_dir.join("app.db");
             let app_db = db::AppDb::open(&db_path).expect("failed to initialize database");
+            let session = discord::Session::open(&app_db).expect("failed to open discord session");
             app.manage(app_db);
+            app.manage(session);
 
             tracing::info!(db_path = %db_path.display(), "database ready");
             tracing::info!("application started");
@@ -64,11 +68,17 @@ pub fn run() {
             commands::settings::settings_update,
             commands::secrets::secrets_is_discord_token_set,
             commands::secrets::secrets_set_discord_token,
+            commands::session::session_subscribe,
+            commands::session::session_play,
+            commands::session::session_stop,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
-        .run(|_app_handle, event| {
+        .run(|app_handle, event| {
             if let tauri::RunEvent::Exit = event {
+                // The bot leaves voice and the gateway before the process is gone.
+                let session = app_handle.state::<Arc<discord::Session>>();
+                session.shutdown();
                 tracing::info!("application closed");
             }
         });

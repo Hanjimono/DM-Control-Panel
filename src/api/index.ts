@@ -41,6 +41,8 @@ export type {
   UserSettingsPatch
 } from "./commands/settings"
 export { secretsIsDiscordTokenSet, secretsSetDiscordToken } from "./commands/secrets"
+export { sessionPlay, sessionStop, sessionSubscribe } from "./commands/session"
+export type { SessionGateway, SessionSnapshot } from "./commands/session"
 export { queryClient } from "./queryClient"
 export { queryKeys } from "./queryKeys"
 export {
@@ -56,6 +58,10 @@ export {
   useUserSettings,
   useSettingsUpdate,
   useSecretsDiscordTokenSet,
-  useSetDiscordToken
+  useSetDiscordToken,
+  usePlayTrack,
+  useStopTrack,
+  useSessionSnapshot
 } from "./hooks"
+export { SessionProvider } from "./session/SessionProvider"
 export type { CommandMutationResult, CommandQueryResult } from "./hooks"

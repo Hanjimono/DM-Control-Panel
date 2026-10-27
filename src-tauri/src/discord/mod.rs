@@ -1,23 +1,15 @@
-//! Discord bot integration scaffold.
+//! Discord gateway session.
 //!
-//! Dependencies (`serenity`, `songbird`) are linked for upcoming client/voice work.
-//! Runtime login, event loops, and playback are intentionally not started here.
+//! The bot logs in, remembers which voice channel the next play should use,
+//! and can start or stop one looping track. It does not register Discord commands.
 
-#![allow(dead_code)]
+mod bot;
+mod channel;
+mod failure;
+mod playback;
+mod session;
+mod snapshot;
 
-pub mod commands;
-
-/// Placeholder for future Discord client / Songbird manager wiring.
-pub struct BotHandle;
-
-impl BotHandle {
-    pub fn new() -> Self {
-        Self
-    }
-}
-
-impl Default for BotHandle {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+pub(crate) use playback::TRACK_MISSING;
+pub use session::Session;
+pub use snapshot::SessionSnapshot;
