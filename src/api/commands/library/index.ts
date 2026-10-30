@@ -1,6 +1,14 @@
 import { apiCall } from "../../client"
 
-import type { Category, CategoryWithTracks, NewTrack, Track, TrackUpdate } from "./types"
+import type {
+  Category,
+  CategoryWithTracks,
+  NewTrack,
+  Track,
+  TrackProbe,
+  TrackProbeRequest,
+  TrackUpdate
+} from "./types"
 
 /**
  * Loads every category, newest first, with its tracks newest first.
@@ -71,12 +79,28 @@ export function libraryDeleteTrack(id: number): Promise<void> {
   return apiCall<void>("library_delete_track", { id })
 }
 
+/**
+ * Reads title, author, duration, and a cover link from a file or SoundCloud URL.
+ * Nothing is stored. The cover is a path or an image URL, never embedded bytes.
+ *
+ * @param source - Kind and path or URL to read
+ * @returns Suggested values. Unknown fields are null
+ */
+export function libraryProbeTrack(source: TrackProbeRequest): Promise<TrackProbe> {
+  return apiCall<TrackProbe>("library_probe_track", {
+    sourceKind: source.sourceKind,
+    sourceRef: source.sourceRef
+  })
+}
+
 export type {
   Category,
   CategoryWithTracks,
   NewTrack,
   SourceKindCode,
   Track,
+  TrackProbe,
+  TrackProbeRequest,
   TrackUpdate
 } from "./types"
 export { SOURCE_KIND } from "./types"

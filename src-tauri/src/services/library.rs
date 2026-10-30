@@ -258,7 +258,7 @@ fn now_ms() -> Result<i64, AppError> {
     i64::try_from(millis).map_err(|_| AppError::unexpected("timestamp does not fit into i64"))
 }
 
-fn validate_source(kind: i16, source_ref: &str) -> Result<(), AppError> {
+pub(crate) fn validate_source(kind: i16, source_ref: &str) -> Result<(), AppError> {
     if source_ref.is_empty() {
         return Err(AppError::validation("Track source is empty"));
     }

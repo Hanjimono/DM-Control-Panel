@@ -37,9 +37,6 @@ const JOIN_FAILED: &str = "The bot could not join the voice channel.";
 pub(crate) const TRACK_MISSING: &str = "That track is not in the library.";
 const FILE_MISSING: &str = "The audio file was not found at the saved path.";
 const FILE_UNPLAYABLE: &str = "The audio file exists, but the decoder cannot play it.";
-const YTDLP_MISSING: &str = "yt-dlp was not found on PATH.";
-const SOUNDCLOUD_UNAVAILABLE: &str = "The SoundCloud link is unavailable.";
-const SOUNDCLOUD_NOT_SINGLE: &str = "The SoundCloud link must be a single track.";
 const SOUNDCLOUD_UNPLAYABLE: &str = "The SoundCloud track could not be played.";
 const DISCONNECTED: &str = "The bot was disconnected from voice during playback.";
 const REBUILD_FAILED: &str =
@@ -172,113 +169,10 @@ fn assess_cached_target(
     Ok((guild_id, channel_id))
 }
 
-fn classify_ytdlp(bytes: &[u8]) -> Result<(), AppError> {
-    let bytes = trim_ascii_bytes(bytes);
-    if bytes.is_empty() {
-        return Err(AppError::expected(SOUNDCLOUD_UNAVAILABLE));
-    }
-    let values = serde_json::Deserializer::from_slice(bytes)
-        .into_iter::<serde_json::Value>()
-        .collect::<Result<Vec<_>, _>>()
-        .map_err(|_| AppError::expected(SOUNDCLOUD_UNAVAILABLE))?;
-    if values.len() != 1 {
-        return Err(AppError::expected(if values.is_empty() {
-            SOUNDCLOUD_UNAVAILABLE
-        } else {
-            SOUNDCLOUD_NOT_SINGLE
-        }));
-    }
-    if is_single_track(&values[0]) {
-        return Ok(());
-    }
-    if is_collection(&values[0]) {
-        return Err(AppError::expected(SOUNDCLOUD_NOT_SINGLE));
-    }
-    Err(AppError::expected(SOUNDCLOUD_UNAVAILABLE))
-}
-
-fn is_single_track(value: &serde_json::Value) -> bool {
-    if let Some(items) = value.as_array() {
-        return items.len() == 1 && is_track_object(&items[0]);
-    }
-    is_track_object(value)
-}
-
-fn is_collection(value: &serde_json::Value) -> bool {
-    if value.as_array().is_some_and(|items| items.len() != 1) {
-        return true;
-    }
-    let Some(object) = value.as_object() else {
-        return false;
-    };
-    if object.contains_key("entries") {
-        return true;
-    }
-    matches!(
-        object.get("_type").and_then(|kind| kind.as_str()),
-        Some("playlist" | "multi_video")
-    )
-}
-
-fn is_track_object(value: &serde_json::Value) -> bool {
-    let Some(object) = value.as_object() else {
-        return false;
-    };
-    if object.contains_key("entries") {
-        return false;
-    }
-    match object.get("_type").and_then(|kind| kind.as_str()) {
-        None | Some("video") => has_track_id(object),
-        _ => false,
-    }
-}
-
-fn has_track_id(object: &serde_json::Map<String, serde_json::Value>) -> bool {
-    match object.get("id") {
-        Some(serde_json::Value::String(id)) => !id.is_empty(),
-        Some(serde_json::Value::Number(_)) => true,
-        _ => false,
-    }
-}
-
-fn trim_ascii_bytes(bytes: &[u8]) -> &[u8] {
-    let start = bytes
-        .iter()
-        .position(|byte| !byte.is_ascii_whitespace())
-        .unwrap_or(bytes.len());
-    let end = bytes
-        .iter()
-        .rposition(|byte| !byte.is_ascii_whitespace())
-        .map(|index| index + 1)
-        .unwrap_or(start);
-    &bytes[start..end]
-}
-
 async fn probe_soundcloud(url: &str) -> Result<(), AppError> {
-    // Our probe must see a playlist. `YoutubeDl` always passes `--no-playlist`
-    // and would otherwise play the first entry.
-    let output = match tokio::process::Command::new("yt-dlp")
-        .args(["-J", "--flat-playlist", url])
-        .output()
+    crate::services::soundcloud::fetch_single(url)
         .await
-    {
-        Ok(output) => output,
-        Err(err) if err.kind() == std::io::ErrorKind::NotFound => {
-            return Err(AppError::expected(YTDLP_MISSING));
-        }
-        Err(err) => {
-            tracing::warn!(error = %err, "yt-dlp probe failed to start");
-            return Err(AppError::expected(SOUNDCLOUD_UNAVAILABLE));
-        }
-    };
-    if !output.status.success() {
-        tracing::warn!(
-            code = output.status.code(),
-            "yt-dlp probe exited without a track"
-        );
-        return Err(AppError::expected(SOUNDCLOUD_UNAVAILABLE));
-    }
-    classify_ytdlp(&output.stdout)
+        .map(|_| ())
 }
 
 async fn prepare_source(http: &reqwest::Client, source: &PlaySource) -> Result<Input, AppError> {
@@ -871,36 +765,5 @@ mod tests {
             empty_voice_effect(false, false),
             EmptyVoice::Ignore
         ));
-    }
-
-    #[test]
-    fn a_single_track_object_is_playable_and_a_set_is_not() {
-        let track = br#"{"id":"123","title":"Dawn","webpage_url":"https://soundcloud.com/a/b"}"#;
-        assert!(classify_ytdlp(track).is_ok());
-
-        let typed = br#"{"_type":"video","id":"123"}"#;
-        assert!(classify_ytdlp(typed).is_ok());
-
-        let set = br#"{"_type":"playlist","entries":[{"id":"1","_type":"url"}]}"#;
-        assert_eq!(message(classify_ytdlp(set)), SOUNDCLOUD_NOT_SINGLE);
-
-        let profile = br#"{"_type":"playlist","extractor":"soundcloud:user","entries":[]}"#;
-        assert_eq!(message(classify_ytdlp(profile)), SOUNDCLOUD_NOT_SINGLE);
-    }
-
-    #[test]
-    fn several_json_values_are_not_one_track() {
-        let lines = b"{\"id\":\"1\"}\n{\"id\":\"2\"}\n";
-        assert_eq!(message(classify_ytdlp(lines)), SOUNDCLOUD_NOT_SINGLE);
-    }
-
-    #[test]
-    fn an_unresolved_or_empty_probe_is_unavailable() {
-        assert_eq!(
-            message(classify_ytdlp(br#"{"_type":"url","id":"1"}"#)),
-            SOUNDCLOUD_UNAVAILABLE
-        );
-        assert_eq!(message(classify_ytdlp(b"")), SOUNDCLOUD_UNAVAILABLE);
-        assert_eq!(message(classify_ytdlp(b"not-json")), SOUNDCLOUD_UNAVAILABLE);
     }
 }

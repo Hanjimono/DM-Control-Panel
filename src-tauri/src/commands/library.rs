@@ -1,6 +1,7 @@
-use crate::api::{run_command, ApiResponse};
+use crate::api::{run_command, run_command_async, ApiResponse};
 use crate::db::AppDb;
 use crate::models::{Category, CategoryWithTracks, NewTrack, Track, TrackUpdate};
+use crate::services::probe::{probe_source, TrackProbe};
 use crate::services::LibraryService;
 use tauri::State;
 
@@ -57,4 +58,16 @@ pub fn library_delete_track(db: State<'_, AppDb>, id: i64) -> ApiResponse<()> {
     run_command("library_delete_track", || {
         LibraryService::delete_track(&db, id)
     })
+}
+
+/// Reads title, author, duration, and a cover link. Nothing is stored.
+#[tauri::command]
+pub async fn library_probe_track(
+    source_kind: i16,
+    source_ref: String,
+) -> Result<ApiResponse<TrackProbe>, String> {
+    Ok(run_command_async("library_probe_track", || async move {
+        probe_source(source_kind, &source_ref).await
+    })
+    .await)
 }

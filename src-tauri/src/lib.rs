@@ -63,6 +63,7 @@ pub fn run() {
             commands::library::library_add_track,
             commands::library::library_update_track,
             commands::library::library_delete_track,
+            commands::library::library_probe_track,
             commands::ping::ping,
             commands::settings::settings_get_all,
             commands::settings::settings_update,

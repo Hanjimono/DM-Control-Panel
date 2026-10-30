@@ -21,6 +21,7 @@ export {
   libraryDeleteCategory,
   libraryDeleteTrack,
   libraryList,
+  libraryProbeTrack,
   libraryRenameCategory,
   libraryUpdateTrack,
   SOURCE_KIND
@@ -31,6 +32,8 @@ export type {
   NewTrack,
   SourceKindCode,
   Track,
+  TrackProbe,
+  TrackProbeRequest,
   TrackUpdate
 } from "./commands/library"
 export { settingsGetAll, settingsUpdate } from "./commands/settings"
@@ -54,6 +57,7 @@ export {
   useAddTrack,
   useUpdateTrack,
   useDeleteTrack,
+  useProbeTrack,
   usePing,
   useUserSettings,
   useSettingsUpdate,
